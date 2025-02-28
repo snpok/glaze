@@ -133,7 +133,14 @@ namespace glz
    [[nodiscard]] GLZ_ALWAYS_INLINE uint32_t hex_to_u32(const char* c) noexcept
    {
       constexpr auto& t = digit_hex_table;
-      const uint8_t arr[4]{t[uint8_t(c[3])], t[uint8_t(c[2])], t[uint8_t(c[1])], t[uint8_t(c[0])]};
+      const std::array<uint8_t, 4> arr = [c, t]() {
+         if constexpr (std::endian::native == std::endian::little) {
+            return std::array<uint8_t, 4>{t[uint8_t(c[3])], t[uint8_t(c[2])], t[uint8_t(c[1])], t[uint8_t(c[0])]};
+         }
+         else {
+            return std::array<uint8_t, 4>{t[uint8_t(c[0])], t[uint8_t(c[1])], t[uint8_t(c[2])], t[uint8_t(c[3])]};
+         }
+      }();
       const auto chunk = std::bit_cast<uint32_t>(arr);
       // check that all hex characters are valid
       if (chunk & repeat_byte4(0b11110000u)) [[unlikely]] {
