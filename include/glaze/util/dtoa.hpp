@@ -3,11 +3,11 @@
 #include <array>
 #include <concepts>
 #include <cstdint>
-#include <cstring>
 
 #include "glaze/util/dragonbox.hpp"
 #include "glaze/util/inline.hpp"
 #include "glaze/util/itoa.hpp"
+#include "glaze/util/memcpy.hpp"
 
 namespace glz
 {
@@ -66,9 +66,9 @@ namespace glz
       buf[0] = uint8_t(a + '0');
       buf += a > 0;
       bool lz = bb < 10 && a == 0; /* leading zero */
-      std::memcpy(buf, char_table + (bb * 2 + lz), 2);
+      glz::memcpy(buf, char_table + (bb * 2 + lz), 2);
       buf -= lz;
-      std::memcpy(buf + 2, char_table + 2 * cc, 2);
+      glz::memcpy(buf + 2, char_table + 2 * cc, 2);
 
       if (ffgghhii) {
          uint32_t dd = (ddee * 5243) >> 19; /* (ddee / 100) */
@@ -77,15 +77,15 @@ namespace glz
          uint32_t hhii = ffgghhii - ffgg * 10000; /* (val % 10000) */
          uint32_t ff = (ffgg * 5243) >> 19; /* (aabb / 100) */
          uint32_t gg = ffgg - ff * 100; /* (aabb % 100) */
-         std::memcpy(buf + 4, char_table + 2 * dd, 2);
-         std::memcpy(buf + 6, char_table + 2 * ee, 2);
-         std::memcpy(buf + 8, char_table + 2 * ff, 2);
-         std::memcpy(buf + 10, char_table + 2 * gg, 2);
+         glz::memcpy(buf + 4, char_table + 2 * dd, 2);
+         glz::memcpy(buf + 6, char_table + 2 * ee, 2);
+         glz::memcpy(buf + 8, char_table + 2 * ff, 2);
+         glz::memcpy(buf + 10, char_table + 2 * gg, 2);
          if (hhii) {
             uint32_t hh = (hhii * 5243) >> 19; /* (ccdd / 100) */
             uint32_t ii = hhii - hh * 100; /* (ccdd % 100) */
-            std::memcpy(buf + 12, char_table + 2 * hh, 2);
-            std::memcpy(buf + 14, char_table + 2 * ii, 2);
+            glz::memcpy(buf + 12, char_table + 2 * hh, 2);
+            glz::memcpy(buf + 14, char_table + 2 * ii, 2);
             tz1 = dec_trailing_zero_table[hh];
             tz2 = dec_trailing_zero_table[ii];
             tz = ii ? tz2 : (tz1 + 2);
@@ -104,8 +104,8 @@ namespace glz
          if (ddee) {
             uint32_t dd = (ddee * 5243) >> 19; /* (ddee / 100) */
             uint32_t ee = ddee - dd * 100; /* (ddee % 100) */
-            std::memcpy(buf + 4, char_table + 2 * dd, 2);
-            std::memcpy(buf + 6, char_table + 2 * ee, 2);
+            glz::memcpy(buf + 4, char_table + 2 * dd, 2);
+            glz::memcpy(buf + 6, char_table + 2 * ee, 2);
             tz1 = dec_trailing_zero_table[dd];
             tz2 = dec_trailing_zero_table[ee];
             tz = ee ? tz2 : (tz1 + 2);
@@ -130,7 +130,7 @@ namespace glz
       }
 
       if (val < 100) {
-         std::memcpy(buf, char_table + (val * 2), 2);
+         glz::memcpy(buf, char_table + (val * 2), 2);
          return buf + 2;
       }
 
@@ -143,7 +143,7 @@ namespace glz
          const uint32_t q = val / 100;
          const uint32_t r = val % 100;
          val = q;
-         std::memcpy(p - 2, char_table + (r * 2), 2);
+         glz::memcpy(p - 2, char_table + (r * 2), 2);
          p -= 2;
       }
 
@@ -151,7 +151,7 @@ namespace glz
          *--p = uint8_t(val + '0');
       }
       else {
-         std::memcpy(p - 2, char_table + (val * 2), 2);
+         glz::memcpy(p - 2, char_table + (val * 2), 2);
       }
 
       return end;
@@ -187,7 +187,7 @@ namespace glz
 
       // NaN or Infinity
       if (exp_bits == (uint32_t(1) << exp_bits_count) - 1) [[unlikely]] {
-         std::memcpy(buf, "null", 4);
+         glz::memcpy(buf, "null", 4);
          return buf + 4;
       }
 
@@ -251,7 +251,7 @@ namespace glz
             }
             exp_dec = std::abs(exp_dec);
             uint32_t lz = exp_dec < 10;
-            std::memcpy(buf, char_table + (exp_dec * 2 + lz), 2);
+            glz::memcpy(buf, char_table + (exp_dec * 2 + lz), 2);
             return buf + 2 - lz;
          }
       }
@@ -303,14 +303,14 @@ namespace glz
             exp_dec = std::abs(exp_dec);
             if (exp_dec < 100) {
                uint32_t lz = exp_dec < 10;
-               std::memcpy(buf, char_table + (exp_dec * 2 + lz), 2);
+               glz::memcpy(buf, char_table + (exp_dec * 2 + lz), 2);
                return buf + 2 - lz;
             }
             else {
                const uint32_t hi = (uint32_t(exp_dec) * 656) >> 16; // exp / 100
                const uint32_t lo = uint32_t(exp_dec) - hi * 100; // exp % 100
                buf[0] = uint8_t(hi) + '0';
-               std::memcpy(&buf[1], char_table + (lo * 2), 2);
+               glz::memcpy(&buf[1], char_table + (lo * 2), 2);
                return buf + 3;
             }
          }

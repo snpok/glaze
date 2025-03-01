@@ -35,6 +35,8 @@
 #include <concepts>
 #include <cstdint>
 
+#include "glaze/util/memcpy.hpp"
+
 namespace glz
 {
    inline constexpr char char_table[200] = {
@@ -66,7 +68,7 @@ namespace glz
 
       if (val < 100) { /* 1-2 digits: aa */
          lz = val < 10;
-         std::memcpy(buf, char_table + (val * 2 + lz), 2);
+         glz::memcpy(buf, char_table + (val * 2 + lz), 2);
          buf -= lz;
          return buf + 2;
       }
@@ -74,9 +76,9 @@ namespace glz
          aa = (val * 5243) >> 19; /* (val / 100) */
          bb = val - aa * 100; /* (val % 100) */
          lz = aa < 10;
-         std::memcpy(buf, char_table + (aa * 2 + lz), 2);
+         glz::memcpy(buf, char_table + (aa * 2 + lz), 2);
          buf -= lz;
-         std::memcpy(&buf[2], char_table + (2 * bb), 2);
+         glz::memcpy(&buf[2], char_table + (2 * bb), 2);
 
          return buf + 4;
       }
@@ -86,10 +88,10 @@ namespace glz
          bb = (bbcc * 5243) >> 19; /* (bbcc / 100) */
          cc = bbcc - bb * 100; /* (bbcc % 100) */
          lz = aa < 10;
-         std::memcpy(buf, char_table + aa * 2 + lz, 2);
+         glz::memcpy(buf, char_table + aa * 2 + lz, 2);
          buf -= lz;
-         std::memcpy(buf + 2, char_table + bb * 2, 2);
-         std::memcpy(buf + 4, char_table + cc * 2, 2);
+         glz::memcpy(buf + 2, char_table + bb * 2, 2);
+         glz::memcpy(buf + 4, char_table + cc * 2, 2);
          return buf + 6;
       }
       else if (val < 100000000) { /* 7~8 digits: aabbccdd */
@@ -101,11 +103,11 @@ namespace glz
          bb = aabb - aa * 100; /* (aabb % 100) */
          dd = ccdd - cc * 100; /* (ccdd % 100) */
          lz = aa < 10;
-         std::memcpy(buf, char_table + aa * 2 + lz, 2);
+         glz::memcpy(buf, char_table + aa * 2 + lz, 2);
          buf -= lz;
-         std::memcpy(buf + 2, char_table + bb * 2, 2);
-         std::memcpy(buf + 4, char_table + cc * 2, 2);
-         std::memcpy(buf + 6, char_table + dd * 2, 2);
+         glz::memcpy(buf + 2, char_table + bb * 2, 2);
+         glz::memcpy(buf + 4, char_table + cc * 2, 2);
+         glz::memcpy(buf + 6, char_table + dd * 2, 2);
          return buf + 8;
       }
       else { /* 9~10 digits: aabbccddee */
@@ -120,12 +122,12 @@ namespace glz
          cc = bbcc - bb * 100; /* (bbcc % 100) */
          ee = ddee - dd * 100; /* (ddee % 100) */
          lz = aa < 10;
-         std::memcpy(buf, char_table + aa * 2 + lz, 2);
+         glz::memcpy(buf, char_table + aa * 2 + lz, 2);
          buf -= lz;
-         std::memcpy(buf + 2, char_table + bb * 2, 2);
-         std::memcpy(buf + 4, char_table + cc * 2, 2);
-         std::memcpy(buf + 6, char_table + dd * 2, 2);
-         std::memcpy(buf + 8, char_table + ee * 2, 2);
+         glz::memcpy(buf + 2, char_table + bb * 2, 2);
+         glz::memcpy(buf + 4, char_table + cc * 2, 2);
+         glz::memcpy(buf + 6, char_table + dd * 2, 2);
+         glz::memcpy(buf + 8, char_table + ee * 2, 2);
          return buf + 10;
       }
    }
@@ -150,10 +152,10 @@ namespace glz
       const uint32_t cc = (ccdd * 5243) >> 19; /* (ccdd / 100) */
       const uint32_t bb = aabb - aa * 100; /* (aabb % 100) */
       const uint32_t dd = ccdd - cc * 100; /* (ccdd % 100) */
-      std::memcpy(buf, char_table + aa * 2, 2);
-      std::memcpy(buf + 2, char_table + bb * 2, 2);
-      std::memcpy(buf + 4, char_table + cc * 2, 2);
-      std::memcpy(buf + 6, char_table + dd * 2, 2);
+      glz::memcpy(buf, char_table + aa * 2, 2);
+      glz::memcpy(buf + 2, char_table + bb * 2, 2);
+      glz::memcpy(buf + 4, char_table + cc * 2, 2);
+      glz::memcpy(buf + 6, char_table + dd * 2, 2);
       return buf + 8;
    }
 
@@ -164,8 +166,8 @@ namespace glz
       /* 4 digits: aabb */
       const uint32_t aa = (val * 5243) >> 19; /* (val / 100) */
       const uint32_t bb = val - aa * 100; /* (val % 100) */
-      std::memcpy(buf, char_table + aa * 2, 2);
-      std::memcpy(buf + 2, char_table + bb * 2, 2);
+      glz::memcpy(buf, char_table + aa * 2, 2);
+      glz::memcpy(buf + 2, char_table + bb * 2, 2);
       return buf + 4;
    }
 
@@ -177,7 +179,7 @@ namespace glz
 
       if (val < 100) { /* 1-2 digits: aa */
          lz = val < 10;
-         std::memcpy(buf, char_table + val * 2 + lz, 2);
+         glz::memcpy(buf, char_table + val * 2 + lz, 2);
          buf -= lz;
          return buf + 2;
       }
@@ -185,9 +187,9 @@ namespace glz
          aa = (val * 5243) >> 19; /* (val / 100) */
          bb = val - aa * 100; /* (val % 100) */
          lz = aa < 10;
-         std::memcpy(buf, char_table + aa * 2 + lz, 2);
+         glz::memcpy(buf, char_table + aa * 2 + lz, 2);
          buf -= lz;
-         std::memcpy(buf + 2, char_table + bb * 2, 2);
+         glz::memcpy(buf + 2, char_table + bb * 2, 2);
          return buf + 4;
       }
       else if (val < 1000000) { /* 5-6 digits: aabbcc */
@@ -196,10 +198,10 @@ namespace glz
          bb = (bbcc * 5243) >> 19; /* (bbcc / 100) */
          cc = bbcc - bb * 100; /* (bbcc % 100) */
          lz = aa < 10;
-         std::memcpy(buf, char_table + aa * 2 + lz, 2);
+         glz::memcpy(buf, char_table + aa * 2 + lz, 2);
          buf -= lz;
-         std::memcpy(buf + 2, char_table + bb * 2, 2);
-         std::memcpy(buf + 4, char_table + cc * 2, 2);
+         glz::memcpy(buf + 2, char_table + bb * 2, 2);
+         glz::memcpy(buf + 4, char_table + cc * 2, 2);
          return buf + 6;
       }
       else { /* 7-8 digits: aabbccdd */
@@ -211,11 +213,11 @@ namespace glz
          bb = aabb - aa * 100; /* (aabb % 100) */
          dd = ccdd - cc * 100; /* (ccdd % 100) */
          lz = aa < 10;
-         std::memcpy(buf, char_table + aa * 2 + lz, 2);
+         glz::memcpy(buf, char_table + aa * 2 + lz, 2);
          buf -= lz;
-         std::memcpy(buf + 2, char_table + bb * 2, 2);
-         std::memcpy(buf + 4, char_table + cc * 2, 2);
-         std::memcpy(buf + 6, char_table + dd * 2, 2);
+         glz::memcpy(buf + 2, char_table + bb * 2, 2);
+         glz::memcpy(buf + 4, char_table + cc * 2, 2);
+         glz::memcpy(buf + 6, char_table + dd * 2, 2);
          return buf + 8;
       }
    }
@@ -230,10 +232,10 @@ namespace glz
          const uint32_t bb = (bbcc * 5243) >> 19; /* (bbcc / 100) */
          const uint32_t cc = bbcc - bb * 100; /* (bbcc % 100) */
          const uint32_t lz = aa < 10;
-         std::memcpy(buf, char_table + aa * 2 + lz, 2);
+         glz::memcpy(buf, char_table + aa * 2 + lz, 2);
          buf -= lz;
-         std::memcpy(buf + 2, char_table + bb * 2, 2);
-         std::memcpy(buf + 4, char_table + cc * 2, 2);
+         glz::memcpy(buf + 2, char_table + bb * 2, 2);
+         glz::memcpy(buf + 4, char_table + cc * 2, 2);
          return buf + 6;
       }
       else { /* 7-8 digits: aabbccdd */
@@ -245,11 +247,11 @@ namespace glz
          const uint32_t bb = aabb - aa * 100; /* (aabb % 100) */
          const uint32_t dd = ccdd - cc * 100; /* (ccdd % 100) */
          const uint32_t lz = aa < 10;
-         std::memcpy(buf, char_table + aa * 2 + lz, 2);
+         glz::memcpy(buf, char_table + aa * 2 + lz, 2);
          buf -= lz;
-         std::memcpy(buf + 2, char_table + bb * 2, 2);
-         std::memcpy(buf + 4, char_table + cc * 2, 2);
-         std::memcpy(buf + 6, char_table + dd * 2, 2);
+         glz::memcpy(buf + 2, char_table + bb * 2, 2);
+         glz::memcpy(buf + 4, char_table + cc * 2, 2);
+         glz::memcpy(buf + 6, char_table + dd * 2, 2);
          return buf + 8;
       }
    }

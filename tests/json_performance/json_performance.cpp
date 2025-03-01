@@ -253,7 +253,7 @@ suite float_tests = [] {
       for (uint32_t i = 0; i < n; ++i) {
          std::ignore = glz::write_json(v, buffer);
          e = glz::read_json(v, buffer);
-         std::memcpy(&v, &i, sizeof(float));
+         glz::memcpy(&v, &i, sizeof(float));
       }
       auto t1 = std::chrono::steady_clock::now();
       auto duration = std::chrono::duration_cast<std::chrono::microseconds>(t1 - t0).count() * 1e-6;

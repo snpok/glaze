@@ -21,7 +21,7 @@ namespace glz
                ctx.error = error_code::syntax_error;
                return;
             }
-            std::memcpy(&value, it, sizeof(T));
+            glz::memcpy(&value, it, sizeof(T));
             to<JSON, T>::template op<Opts>(value, ctx, out, ix);
             it += sizeof(T);
          };
@@ -274,7 +274,7 @@ namespace glz
                      ctx.error = error_code::unexpected_end;
                      return;
                   }
-                  std::memcpy(&value, it, sizeof(T));
+                  glz::memcpy(&value, it, sizeof(T));
                   to<JSON, T>::template op<Opts>(value, ctx, out, ix);
                   it += sizeof(T);
                   if (i != n - 1) {

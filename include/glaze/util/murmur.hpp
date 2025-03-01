@@ -4,9 +4,10 @@
 #pragma once
 
 #include <cstdint>
-#include <cstring>
 #include <string>
 #include <string_view>
+
+#include "glaze/util/memcpy.hpp"
 
 // Modified from: https://en.wikipedia.org/wiki/MurmurHash
 
@@ -22,7 +23,7 @@ namespace glz
       }
       else {
          // Note: memcpy is way faster with compiletime known length
-         std::memcpy(&res, bytes, 4);
+         glz::memcpy(&res, bytes, 4);
       }
       return res;
    }

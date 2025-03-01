@@ -8954,7 +8954,7 @@ struct glz::meta<Address>
 {
    static constexpr auto value = [](Address& self) -> FixedName<10> {
       FixedName<10> val;
-      std::memcpy(val.buf.data(), self.test.data(), self.test.size() + 1);
+      glz::memcpy(val.buf.data(), self.test.data(), self.test.size() + 1);
       val.len = uint16_t(self.test.size());
       return val;
    };
@@ -9046,7 +9046,7 @@ suite single_float_struct = [] {
       expect(not glz::write_json(obj, buf));
       std::string out{};
       out.resize(buf.size());
-      std::memcpy(out.data(), buf.data(), buf.size());
+      glz::memcpy(out.data(), buf.data(), buf.size());
       expect(out == R"({"f":0})") << out;
    };
 };

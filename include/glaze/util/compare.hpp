@@ -4,9 +4,10 @@
 #pragma once
 
 #include <cstdint>
-#include <cstring>
 #include <string_view>
 #include <type_traits>
+
+#include "glaze/util/memcpy.hpp"
 
 namespace glz
 {
@@ -16,8 +17,8 @@ namespace glz
       if (count > 7) {
          uint64_t v[2];
          while (count > 8) {
-            std::memcpy(v, lhs, 8);
-            std::memcpy(v + 1, rhs, 8);
+            glz::memcpy(v, lhs, 8);
+            glz::memcpy(v + 1, rhs, 8);
             if (v[0] != v[1]) {
                return false;
             }
@@ -30,8 +31,8 @@ namespace glz
          lhs -= shift;
          rhs -= shift;
 
-         std::memcpy(v, lhs, 8);
-         std::memcpy(v + 1, rhs, 8);
+         glz::memcpy(v, lhs, 8);
+         glz::memcpy(v + 1, rhs, 8);
          return v[0] == v[1];
       }
 
@@ -39,8 +40,8 @@ namespace glz
          constexpr uint64_t n{sizeof(uint32_t)};
          if (count >= n) {
             uint32_t v[2];
-            std::memcpy(v, lhs, n);
-            std::memcpy(v + 1, rhs, n);
+            glz::memcpy(v, lhs, n);
+            glz::memcpy(v + 1, rhs, n);
             if (v[0] != v[1]) {
                return false;
             }
@@ -53,8 +54,8 @@ namespace glz
          constexpr uint64_t n{sizeof(uint16_t)};
          if (count >= n) {
             uint16_t v[2];
-            std::memcpy(v, lhs, n);
-            std::memcpy(v + 1, rhs, n);
+            glz::memcpy(v, lhs, n);
+            glz::memcpy(v + 1, rhs, n);
             if (v[0] != v[1]) {
                return false;
             }
@@ -77,8 +78,8 @@ namespace glz
    {
       uint64_t v[2];
       while (count > 8) {
-         std::memcpy(v, lhs, 8);
-         std::memcpy(v + 1, rhs, 8);
+         glz::memcpy(v, lhs, 8);
+         glz::memcpy(v + 1, rhs, 8);
          if (v[0] != v[1]) {
             return false;
          }
@@ -91,8 +92,8 @@ namespace glz
       lhs -= shift;
       rhs -= shift;
 
-      std::memcpy(v, lhs, 8);
-      std::memcpy(v + 1, rhs, 8);
+      glz::memcpy(v, lhs, 8);
+      glz::memcpy(v + 1, rhs, 8);
       return v[0] == v[1];
    }
 
@@ -105,50 +106,50 @@ namespace glz
       }
       else if constexpr (Count == 8) {
          uint64_t l, r;
-         std::memcpy(&l, lhs, 8);
-         std::memcpy(&r, rhs, 8);
+         glz::memcpy(&l, lhs, 8);
+         glz::memcpy(&r, rhs, 8);
          return l == r;
       }
       else if constexpr (Count == 7) {
          uint32_t l, r;
-         std::memcpy(&l, lhs, 4);
-         std::memcpy(&r, rhs, 4);
+         glz::memcpy(&l, lhs, 4);
+         glz::memcpy(&r, rhs, 4);
          uint32_t l2, r2;
-         std::memcpy(&l2, lhs + 3, 4);
-         std::memcpy(&r2, rhs + 3, 4);
+         glz::memcpy(&l2, lhs + 3, 4);
+         glz::memcpy(&r2, rhs + 3, 4);
          return (l == r) & (l2 == r2);
       }
       else if constexpr (Count == 6) {
          uint32_t l, r;
-         std::memcpy(&l, lhs, 4);
-         std::memcpy(&r, rhs, 4);
+         glz::memcpy(&l, lhs, 4);
+         glz::memcpy(&r, rhs, 4);
          uint16_t l2, r2;
-         std::memcpy(&l2, lhs + 4, 2);
-         std::memcpy(&r2, rhs + 4, 2);
+         glz::memcpy(&l2, lhs + 4, 2);
+         glz::memcpy(&r2, rhs + 4, 2);
          return (l == r) & (l2 == r2);
       }
       else if constexpr (Count == 5) {
          uint32_t l, r;
-         std::memcpy(&l, lhs, 4);
-         std::memcpy(&r, rhs, 4);
+         glz::memcpy(&l, lhs, 4);
+         glz::memcpy(&r, rhs, 4);
          return (l == r) & (lhs[4] == rhs[4]);
       }
       else if constexpr (Count == 4) {
          uint32_t l, r;
-         std::memcpy(&l, lhs, 4);
-         std::memcpy(&r, rhs, 4);
+         glz::memcpy(&l, lhs, 4);
+         glz::memcpy(&r, rhs, 4);
          return l == r;
       }
       else if constexpr (Count == 3) {
          uint16_t l, r;
-         std::memcpy(&l, lhs, 2);
-         std::memcpy(&r, rhs, 2);
+         glz::memcpy(&l, lhs, 2);
+         glz::memcpy(&r, rhs, 2);
          return (l == r) & (lhs[2] == rhs[2]);
       }
       else if constexpr (Count == 2) {
          uint16_t l, r;
-         std::memcpy(&l, lhs, 2);
-         std::memcpy(&r, rhs, 2);
+         glz::memcpy(&l, lhs, 2);
+         glz::memcpy(&r, rhs, 2);
          return l == r;
       }
       else if constexpr (Count == 1) {
@@ -225,43 +226,43 @@ namespace glz
       if constexpr (N == 8) {
          static constexpr auto packed = pack<Str, 8>();
          uint64_t in;
-         std::memcpy(&in, other, 8);
+         glz::memcpy(&in, other, 8);
          return (in == packed);
       }
       else if constexpr (N == 7) {
          static constexpr auto packed = pack_buffered<Str, 8>();
          uint64_t in{};
-         std::memcpy(&in, other, 7);
+         glz::memcpy(&in, other, 7);
          return (in == packed);
       }
       else if constexpr (N == 6) {
          static constexpr auto packed = pack_buffered<Str, 8>();
          uint64_t in{};
-         std::memcpy(&in, other, 6);
+         glz::memcpy(&in, other, 6);
          return (in == packed);
       }
       else if constexpr (N == 5) {
          static constexpr auto packed = pack<Str, 4>();
          uint32_t in;
-         std::memcpy(&in, other, 4);
+         glz::memcpy(&in, other, 4);
          return (in == packed) & (Str[4] == other[4]);
       }
       else if constexpr (N == 4) {
          static constexpr auto packed = pack<Str, 4>();
          uint32_t in;
-         std::memcpy(&in, other, 4);
+         glz::memcpy(&in, other, 4);
          return (in == packed);
       }
       else if constexpr (N == 3) {
          static constexpr auto packed = pack<Str, 2>();
          uint16_t in;
-         std::memcpy(&in, other, 2);
+         glz::memcpy(&in, other, 2);
          return (in == packed) & (Str[2] == other[2]);
       }
       else if constexpr (N == 2) {
          static constexpr auto packed = pack<Str, 2>();
          uint16_t in;
-         std::memcpy(&in, other, 2);
+         glz::memcpy(&in, other, 2);
          return (in == packed);
       }
       else if constexpr (N == 1) {

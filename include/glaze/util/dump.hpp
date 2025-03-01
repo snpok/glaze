@@ -5,13 +5,13 @@
 
 #include <bit>
 #include <cstddef>
-#include <cstring>
 #include <span>
 #include <string_view>
 
 #include "glaze/concepts/container_concepts.hpp"
 #include "glaze/core/opts.hpp"
 #include "glaze/util/convert.hpp"
+#include "glaze/util/memcpy.hpp"
 #include "glaze/util/memcpy.hpp"
 
 namespace glz
@@ -99,7 +99,7 @@ namespace glz
             }
          }
       }
-      std::memcpy(&b[ix], s.data(), n);
+      glz::memcpy(&b[ix], s.data(), n);
       ix += n;
    }
 
@@ -115,7 +115,7 @@ namespace glz
             }
          }
       }
-      std::memcpy(&b[ix], str.data(), n);
+      glz::memcpy(&b[ix], str.data(), n);
       ix += n;
    }
 
@@ -168,7 +168,7 @@ namespace glz
             }
          }
       }
-      std::memcpy(&b[ix], s.data(), n);
+      glz::memcpy(&b[ix], s.data(), n);
       ix += n;
    }
 
@@ -184,7 +184,7 @@ namespace glz
             }
          }
       }
-      std::memcpy(&b[ix], str.data(), n);
+      glz::memcpy(&b[ix], str.data(), n);
       ix += n;
    }
 
@@ -201,7 +201,7 @@ namespace glz
                }
             }
          }
-         std::memcpy(&b[ix], str.data(), n);
+         glz::memcpy(&b[ix], str.data(), n);
          ix += n;
       }
    }
@@ -216,7 +216,7 @@ namespace glz
             b.resize(2 * k);
          }
       }
-      std::memcpy(&b[ix], bytes.data(), n);
+      glz::memcpy(&b[ix], bytes.data(), n);
       ix += n;
    }
 
@@ -229,7 +229,7 @@ namespace glz
             b.resize(2 * k);
          }
       }
-      std::memcpy(&b[ix], bytes.data(), N);
+      glz::memcpy(&b[ix], bytes.data(), N);
       ix += N;
    }
 }

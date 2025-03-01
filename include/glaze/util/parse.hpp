@@ -6,7 +6,6 @@
 #include <algorithm>
 #include <bit>
 #include <charconv>
-#include <cstring>
 #include <iterator>
 #include <span>
 
@@ -19,6 +18,7 @@
 #include "glaze/util/expected.hpp"
 #include "glaze/util/inline.hpp"
 #include "glaze/util/string_literal.hpp"
+#include "glaze/util/memcpy.hpp"
 
 namespace glz
 {
@@ -244,7 +244,7 @@ namespace glz
          }
          // The next two characters must be `\u`
          uint16_t u;
-         std::memcpy(&u, it, 2);
+         glz::memcpy(&u, it, 2);
          if (u != to_uint16_t(R"(\u)")) [[unlikely]] {
             return false;
          }
@@ -299,7 +299,7 @@ namespace glz
          }
          // The next two characters must be `\u`
          uint16_t u;
-         std::memcpy(&u, it, 2);
+         glz::memcpy(&u, it, 2);
          if (u != to_uint16_t(R"(\u)")) [[unlikely]] {
             return false;
          }
@@ -550,8 +550,8 @@ namespace glz
       if (length > 7) {
          uint64_t v[2];
          while (length > 8) {
-            std::memcpy(v, ws, 8);
-            std::memcpy(v + 1, it, 8);
+            glz::memcpy(v, ws, 8);
+            glz::memcpy(v + 1, it, 8);
             if (v[0] != v[1]) {
                return;
             }
@@ -564,16 +564,16 @@ namespace glz
          ws -= shift;
          it -= shift;
 
-         std::memcpy(v, ws, 8);
-         std::memcpy(v + 1, it, 8);
+         glz::memcpy(v, ws, 8);
+         glz::memcpy(v + 1, it, 8);
          return;
       }
       {
          constexpr uint64_t n{sizeof(uint32_t)};
          if (length >= n) {
             uint32_t v[2];
-            std::memcpy(v, ws, n);
-            std::memcpy(v + 1, it, n);
+            glz::memcpy(v, ws, n);
+            glz::memcpy(v + 1, it, n);
             if (v[0] != v[1]) {
                return;
             }
@@ -586,8 +586,8 @@ namespace glz
          constexpr uint64_t n{sizeof(uint16_t)};
          if (length >= n) {
             uint16_t v[2];
-            std::memcpy(v, ws, n);
-            std::memcpy(v + 1, it, n);
+            glz::memcpy(v, ws, n);
+            glz::memcpy(v + 1, it, n);
             if (v[0] != v[1]) {
                return;
             }
@@ -692,7 +692,7 @@ namespace glz
       if constexpr (check_validate_skipped(Opts)) {
          while (true) {
             uint64_t swar{};
-            std::memcpy(&swar, it, 8);
+            glz::memcpy(&swar, it, 8);
 
             constexpr uint64_t lo7_mask = repeat_byte8(0b01111111);
             const uint64_t lo7 = swar & lo7_mask;
@@ -831,7 +831,7 @@ namespace glz
 
       while (it < end) [[likely]] {
          uint64_t chunk;
-         std::memcpy(&chunk, it, 8);
+         glz::memcpy(&chunk, it, 8);
          const uint64_t test = has_quote(chunk) | has_char<open>(chunk) | has_char<close>(chunk);
          if (test) {
             it += (countr_zero(test) >> 3);
@@ -879,7 +879,7 @@ namespace glz
 
       while (it < end) [[likely]] {
          uint64_t chunk;
-         std::memcpy(&chunk, it, 8);
+         glz::memcpy(&chunk, it, 8);
          const uint64_t test = has_quote(chunk) | has_char<'/'>(chunk) | has_char<open>(chunk) | has_char<close>(chunk);
          if (test) {
             it += (countr_zero(test) >> 3);
@@ -934,7 +934,7 @@ namespace glz
 
       for (const auto fin = end - 7; it < fin;) {
          uint64_t chunk;
-         std::memcpy(&chunk, it, 8);
+         glz::memcpy(&chunk, it, 8);
          const uint64_t test = has_quote(chunk) | has_char<open>(chunk) | has_char<close>(chunk);
          if (test) {
             it += (countr_zero(test) >> 3);
@@ -1018,7 +1018,7 @@ namespace glz
 
       for (const auto fin = end - 7; it < fin;) {
          uint64_t chunk;
-         std::memcpy(&chunk, it, 8);
+         glz::memcpy(&chunk, it, 8);
          const uint64_t test = has_quote(chunk) | has_char<'/'>(chunk) | has_char<open>(chunk) | has_char<close>(chunk);
          if (test) {
             it += (countr_zero(test) >> 3);

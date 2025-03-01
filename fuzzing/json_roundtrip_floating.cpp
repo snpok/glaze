@@ -2,7 +2,6 @@
 #include <cmath>
 #include <cstddef>
 #include <cstdint>
-#include <cstring>
 #include <glaze/glaze.hpp>
 #include <vector>
 
@@ -20,7 +19,7 @@ void test(const uint8_t* Data, size_t Size)
    S s{};
 
    if (Size >= sizeof(T)) {
-      std::memcpy(&s.value, Data, sizeof(T));
+      glz::memcpy(&s.value, Data, sizeof(T));
    }
    else {
       return;

@@ -4,12 +4,12 @@
 #include <bit>
 #include <cmath>
 #include <cstdint>
-#include <cstring>
 #include <iterator>
 
 #include "glaze/util/for_each.hpp"
 #include "glaze/util/inline.hpp"
 #include "glaze/util/type_traits.hpp"
+#include "glaze/util/memcpy.hpp"
 
 // Characters to integer parsing
 
@@ -784,10 +784,10 @@ namespace glz
       const auto n = size_t(end - it);
       if (n > 0) [[likely]] {
          if (n < buffer_length) {
-            std::memcpy(data.data(), it, n);
+            glz::memcpy(data.data(), it, n);
          }
          else {
-            std::memcpy(data.data(), it, buffer_length);
+            glz::memcpy(data.data(), it, buffer_length);
          }
 
          const auto start = data.data();

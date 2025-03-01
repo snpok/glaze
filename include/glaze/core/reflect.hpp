@@ -1598,7 +1598,7 @@ namespace glz
                }
             }
             else {
-               std::memcpy(&h, it, 2);
+               glz::memcpy(&h, it, 2);
             }
             return HashInfo.table[bitmix(h, HashInfo.seed) % bsize];
          }
@@ -1614,7 +1614,7 @@ namespace glz
                }
             }
             else {
-               std::memcpy(&h, it, 4);
+               glz::memcpy(&h, it, 4);
             }
             return HashInfo.table[bitmix(h, HashInfo.seed) % bsize];
          }
@@ -1630,7 +1630,7 @@ namespace glz
                }
             }
             else {
-               std::memcpy(&h, it, 8);
+               glz::memcpy(&h, it, 8);
             }
             return HashInfo.table[rich_bitmix(h, HashInfo.seed) % bsize];
          }
@@ -1835,7 +1835,7 @@ namespace glz
                }
             }
             else {
-               std::memcpy(&h, it, 2);
+               glz::memcpy(&h, it, 2);
             }
             return HashInfo.table[bitmix(h, HashInfo.seed) % bsize];
          }
@@ -1848,7 +1848,7 @@ namespace glz
                }
             }
             else {
-               std::memcpy(&h, it, 4);
+               glz::memcpy(&h, it, 4);
             }
             return HashInfo.table[bitmix(h, HashInfo.seed) % bsize];
          }
@@ -1861,7 +1861,7 @@ namespace glz
                }
             }
             else {
-               std::memcpy(&h, it, 8);
+               glz::memcpy(&h, it, 8);
             }
             return HashInfo.table[rich_bitmix(h, HashInfo.seed) % bsize];
          }

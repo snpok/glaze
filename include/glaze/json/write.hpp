@@ -83,7 +83,7 @@ namespace glz
                b.resize(2 * k);
             }
          }
-         std::memcpy(&b[ix], ",\n", 2);
+         glz::memcpy(&b[ix], ",\n", 2);
          ix += 2;
          std::memset(&b[ix], Opts.indentation_char, ctx.indentation_level);
          ix += ctx.indentation_level;
@@ -96,7 +96,7 @@ namespace glz
                }
             }
          }
-         std::memcpy(&b[ix], ",", 1);
+         glz::memcpy(&b[ix], ",", 1);
          ++ix;
       }
    }
@@ -288,18 +288,18 @@ namespace glz
             }
          }
 
-         std::memcpy(&b[ix], "\"", 1);
+         glz::memcpy(&b[ix], "\"", 1);
          ++ix;
          for (size_t i = value.size(); i > 0; --i) {
             if (value[i - 1]) {
-               std::memcpy(&b[ix], "1", 1);
+               glz::memcpy(&b[ix], "1", 1);
             }
             else {
-               std::memcpy(&b[ix], "0", 1);
+               glz::memcpy(&b[ix], "0", 1);
             }
             ++ix;
          }
-         std::memcpy(&b[ix], "\"", 1);
+         glz::memcpy(&b[ix], "\"", 1);
          ++ix;
       }
    };
@@ -326,20 +326,20 @@ namespace glz
             }
          }
 
-         std::memcpy(&b[ix], "[", 1);
+         glz::memcpy(&b[ix], "[", 1);
          ++ix;
 
          invoke_table<N>([&]<size_t I>() {
             if (get_member(value, get<I>(reflect<T>::values))) {
-               std::memcpy(&b[ix], "\"", 1);
+               glz::memcpy(&b[ix], "\"", 1);
                ++ix;
                constexpr auto& key = reflect<T>::keys[I];
                if constexpr (not key.empty()) {
                   constexpr auto n = key.size();
-                  std::memcpy(&b[ix], key.data(), n);
+                  glz::memcpy(&b[ix], key.data(), n);
                   ix += n;
                }
-               std::memcpy(&b[ix], "\",", 2);
+               glz::memcpy(&b[ix], "\",", 2);
                ix += 2;
             }
          });
@@ -348,7 +348,7 @@ namespace glz
             b[ix - 1] = ']';
          }
          else {
-            std::memcpy(&b[ix], "]", 1);
+            glz::memcpy(&b[ix], "]", 1);
             ++ix;
          }
       }
@@ -391,14 +391,14 @@ namespace glz
 
          static constexpr auto O = write_unchecked_on<Opts>();
 
-         std::memcpy(&b[ix], "[", 1);
+         glz::memcpy(&b[ix], "[", 1);
          ++ix;
          using Value = core_t<typename T::value_type>;
          to<JSON, Value>::template op<O>(value.real(), ctx, b, ix);
-         std::memcpy(&b[ix], ",", 1);
+         glz::memcpy(&b[ix], ",", 1);
          ++ix;
          to<JSON, Value>::template op<O>(value.imag(), ctx, b, ix);
-         std::memcpy(&b[ix], "]", 1);
+         glz::memcpy(&b[ix], "]", 1);
          ++ix;
       }
    };
@@ -418,20 +418,20 @@ namespace glz
 
          if constexpr (Opts.bools_as_numbers) {
             if (value) {
-               std::memcpy(&b[ix], "1", 1);
+               glz::memcpy(&b[ix], "1", 1);
             }
             else {
-               std::memcpy(&b[ix], "0", 1);
+               glz::memcpy(&b[ix], "0", 1);
             }
             ++ix;
          }
          else {
             if (value) {
-               std::memcpy(&b[ix], "true", 4);
+               glz::memcpy(&b[ix], "true", 4);
                ix += 4;
             }
             else {
-               std::memcpy(&b[ix], "false", 5);
+               glz::memcpy(&b[ix], "false", 5);
                ix += 5;
             }
          }
@@ -454,10 +454,10 @@ namespace glz
          static constexpr auto O = write_unchecked_on<Opts>();
 
          if constexpr (Opts.quoted_num) {
-            std::memcpy(&b[ix], "\"", 1);
+            glz::memcpy(&b[ix], "\"", 1);
             ++ix;
             write_chars::op<O>(value, ctx, b, ix);
-            std::memcpy(&b[ix], "\"", 1);
+            glz::memcpy(&b[ix], "\"", 1);
             ++ix;
          }
          else {
@@ -502,20 +502,20 @@ namespace glz
                   }
                }
 
-               std::memcpy(&b[ix], "\"", 1);
+               glz::memcpy(&b[ix], "\"", 1);
                ++ix;
                if (const auto escaped = char_escape_table[uint8_t(value)]; escaped) {
-                  std::memcpy(&b[ix], &escaped, 2);
+                  glz::memcpy(&b[ix], &escaped, 2);
                   ix += 2;
                }
                else if (value == '\0') {
                   // null character treated as empty string
                }
                else {
-                  std::memcpy(&b[ix], &value, 1);
+                  glz::memcpy(&b[ix], &value, 1);
                   ++ix;
                }
-               std::memcpy(&b[ix], "\"", 1);
+               glz::memcpy(&b[ix], "\"", 1);
                ++ix;
             }
          }
@@ -541,14 +541,14 @@ namespace glz
                }
                // now we don't have to check writing
 
-               std::memcpy(&b[ix], "\"", 1);
+               glz::memcpy(&b[ix], "\"", 1);
                ++ix;
                if (str.size()) [[likely]] {
                   const auto n = str.size();
-                  std::memcpy(&b[ix], str.data(), n);
+                  glz::memcpy(&b[ix], str.data(), n);
                   ix += n;
                }
-               std::memcpy(&b[ix], "\"", 1);
+               glz::memcpy(&b[ix], "\"", 1);
                ++ix;
             }
             else {
@@ -580,12 +580,12 @@ namespace glz
                if constexpr (Opts.raw) {
                   const auto n = str.size();
                   if (n) {
-                     std::memcpy(&b[ix], str.data(), n);
+                     glz::memcpy(&b[ix], str.data(), n);
                      ix += n;
                   }
                }
                else {
-                  std::memcpy(&b[ix], "\"", 1);
+                  glz::memcpy(&b[ix], "\"", 1);
                   ++ix;
 
                   const auto* c = str.data();
@@ -600,9 +600,9 @@ namespace glz
 
                   // This 128bit SWAR approach tends to be slower than SIMD approaches
                   /*for (const auto end_m15 = e - 15; c < end_m15;) {
-                   std::memcpy(data, c, 16);
+                   glz::memcpy(data, c, 16);
                    __uint128_t swar;
-                   std::memcpy(&swar, c, 16);
+                   glz::memcpy(&swar, c, 16);
 
                    constexpr __uint128_t lo7_mask = repeat_byte16(0b01111111);
                    const __uint128_t lo7 = swar & lo7_mask;
@@ -622,7 +622,7 @@ namespace glz
                    c += length;
                    data += length;
 
-                   std::memcpy(data, &char_escape_table[uint8_t(*c)], 2);
+                   glz::memcpy(data, &char_escape_table[uint8_t(*c)], 2);
                    data += 2;
                    ++c;
                    }*/
@@ -674,7 +674,7 @@ namespace glz
                    c += length;
                    data += length;
 
-                   std::memcpy(data, &char_escape_table[uint8_t(*c)], 2);
+                   glz::memcpy(data, &char_escape_table[uint8_t(*c)], 2);
                    data += 2;
                    ++c;
                    }
@@ -717,7 +717,7 @@ namespace glz
                         c += length;
                         data += length;
 
-                        std::memcpy(data, &char_escape_table[uint8_t(*c)], 2);
+                        glz::memcpy(data, &char_escape_table[uint8_t(*c)], 2);
                         data += 2;
                         ++c;
                      }
@@ -726,9 +726,9 @@ namespace glz
 
                   if (n > 7) {
                      for (const auto end_m7 = e - 7; c < end_m7;) {
-                        std::memcpy(data, c, 8);
+                        glz::memcpy(data, c, 8);
                         uint64_t swar;
-                        std::memcpy(&swar, c, 8);
+                        glz::memcpy(&swar, c, 8);
 
                         constexpr uint64_t lo7_mask = repeat_byte8(0b01111111);
                         const uint64_t lo7 = swar & lo7_mask;
@@ -748,7 +748,7 @@ namespace glz
                         c += length;
                         data += length;
 
-                        std::memcpy(data, &char_escape_table[uint8_t(*c)], 2);
+                        glz::memcpy(data, &char_escape_table[uint8_t(*c)], 2);
                         data += 2;
                         ++c;
                      }
@@ -757,18 +757,18 @@ namespace glz
                   // Tail end of buffer. Uncommon for long strings.
                   for (; c < e; ++c) {
                      if (const auto escaped = char_escape_table[uint8_t(*c)]; escaped) {
-                        std::memcpy(data, &escaped, 2);
+                        glz::memcpy(data, &escaped, 2);
                         data += 2;
                      }
                      else {
-                        std::memcpy(data, c, 1);
+                        glz::memcpy(data, c, 1);
                         ++data;
                      }
                   }
 
                   ix += size_t(data - start);
 
-                  std::memcpy(&b[ix], "\"", 1);
+                  glz::memcpy(&b[ix], "\"", 1);
                   ++ix;
                }
             }
@@ -835,13 +835,13 @@ namespace glz
             }
          }
 
-         std::memcpy(&b[ix], "\"", 1);
+         glz::memcpy(&b[ix], "\"", 1);
          ++ix;
          if constexpr (not name.empty()) {
-            std::memcpy(&b[ix], name.data(), n);
+            glz::memcpy(&b[ix], name.data(), n);
             ix += n;
          }
-         std::memcpy(&b[ix], "\"", 1);
+         glz::memcpy(&b[ix], "\"", 1);
          ++ix;
       }
    };
@@ -860,7 +860,7 @@ namespace glz
                }
             }
 
-            std::memcpy(&b[ix], value.str.data(), n);
+            glz::memcpy(&b[ix], value.str.data(), n);
             ix += n;
          }
       }
@@ -880,7 +880,7 @@ namespace glz
                }
             }
 
-            std::memcpy(&b[ix], value.str.data(), n);
+            glz::memcpy(&b[ix], value.str.data(), n);
             ix += n;
          }
       }
@@ -896,13 +896,13 @@ namespace glz
             }
          }
          if constexpr (Opts.new_lines_in_arrays) {
-            std::memcpy(&b[ix], ",\n", 2);
+            glz::memcpy(&b[ix], ",\n", 2);
             ix += 2;
             std::memset(&b[ix], Opts.indentation_char, ctx.indentation_level);
             ix += ctx.indentation_level;
          }
          else {
-            std::memcpy(&b[ix], ", ", 2);
+            glz::memcpy(&b[ix], ", ", 2);
             ix += 2;
          }
       }
@@ -914,7 +914,7 @@ namespace glz
                }
             }
          }
-         std::memcpy(&b[ix], ",", 1);
+         glz::memcpy(&b[ix], ",", 1);
          ++ix;
       }
    }
@@ -982,13 +982,13 @@ namespace glz
                   }
 
                   if constexpr (Opts.new_lines_in_arrays) {
-                     std::memcpy(&b[ix], "[\n", 2);
+                     glz::memcpy(&b[ix], "[\n", 2);
                      ix += 2;
                      std::memset(&b[ix], Opts.indentation_char, ctx.indentation_level);
                      ix += ctx.indentation_level;
                   }
                   else {
-                     std::memcpy(&b[ix], "[", 1);
+                     glz::memcpy(&b[ix], "[", 1);
                      ++ix;
                   }
                }
@@ -1000,7 +1000,7 @@ namespace glz
                         b.resize(2 * k);
                      }
                   }
-                  std::memcpy(&b[ix], "[", 1);
+                  glz::memcpy(&b[ix], "[", 1);
                   ++ix;
                }
 
@@ -1012,18 +1012,18 @@ namespace glz
                for (const auto fin = std::end(value); it != fin; ++it) {
                   if constexpr (Opts.prettify) {
                      if constexpr (Opts.new_lines_in_arrays) {
-                        std::memcpy(&b[ix], ",\n", 2);
+                        glz::memcpy(&b[ix], ",\n", 2);
                         ix += 2;
                         std::memset(&b[ix], Opts.indentation_char, ctx.indentation_level);
                         ix += ctx.indentation_level;
                      }
                      else {
-                        std::memcpy(&b[ix], ", ", 2);
+                        glz::memcpy(&b[ix], ", ", 2);
                         ix += 2;
                      }
                   }
                   else {
-                     std::memcpy(&b[ix], ",", 1);
+                     glz::memcpy(&b[ix], ",", 1);
                      ++ix;
                   }
 
@@ -1031,13 +1031,13 @@ namespace glz
                }
                if constexpr (Opts.prettify && Opts.new_lines_in_arrays) {
                   ctx.indentation_level -= Opts.indentation_width;
-                  std::memcpy(&b[ix], "\n", 1);
+                  glz::memcpy(&b[ix], "\n", 1);
                   ++ix;
                   std::memset(&b[ix], Opts.indentation_char, ctx.indentation_level);
                   ix += ctx.indentation_level;
                }
 
-               std::memcpy(&b[ix], "]", 1);
+               glz::memcpy(&b[ix], "]", 1);
                ++ix;
             }
             else {
@@ -1055,13 +1055,13 @@ namespace glz
                   }
 
                   if constexpr (Opts.new_lines_in_arrays) {
-                     std::memcpy(&b[ix], "[\n", 2);
+                     glz::memcpy(&b[ix], "[\n", 2);
                      ix += 2;
                      std::memset(&b[ix], Opts.indentation_char, ctx.indentation_level);
                      ix += ctx.indentation_level;
                   }
                   else {
-                     std::memcpy(&b[ix], "[", 1);
+                     glz::memcpy(&b[ix], "[", 1);
                      ++ix;
                   }
                }
@@ -1071,7 +1071,7 @@ namespace glz
                         b.resize(2 * k);
                      }
                   }
-                  std::memcpy(&b[ix], "[", 1);
+                  glz::memcpy(&b[ix], "[", 1);
                   ++ix;
                }
 
@@ -1103,18 +1103,18 @@ namespace glz
 
                      if constexpr (Opts.prettify) {
                         if constexpr (Opts.new_lines_in_arrays) {
-                           std::memcpy(&b[ix], ",\n", 2);
+                           glz::memcpy(&b[ix], ",\n", 2);
                            ix += 2;
                            std::memset(&b[ix], Opts.indentation_char, ctx.indentation_level);
                            ix += ctx.indentation_level;
                         }
                         else {
-                           std::memcpy(&b[ix], ", ", 2);
+                           glz::memcpy(&b[ix], ", ", 2);
                            ix += 2;
                         }
                      }
                      else {
-                        std::memcpy(&b[ix], ",", 1);
+                        glz::memcpy(&b[ix], ",", 1);
                         ++ix;
                      }
 
@@ -1152,7 +1152,7 @@ namespace glz
                         b.resize(2 * k);
                      }
                   }
-                  std::memcpy(&b[ix], "\n", 1);
+                  glz::memcpy(&b[ix], "\n", 1);
                   ++ix;
                   std::memset(&b[ix], Opts.indentation_char, ctx.indentation_level);
                   ix += ctx.indentation_level;
@@ -1218,7 +1218,7 @@ namespace glz
                         b.resize(2 * k);
                      }
                   }
-                  std::memcpy(&b[ix], "\n", 1);
+                  glz::memcpy(&b[ix], "\n", 1);
                   ++ix;
                   std::memset(&b[ix], Opts.indentation_char, ctx.indentation_level);
                   ix += ctx.indentation_level;
@@ -1346,7 +1346,7 @@ namespace glz
             }
          }
          static constexpr uint32_t null_v = 1819047278;
-         std::memcpy(&b[ix], &null_v, 4);
+         glz::memcpy(&b[ix], &null_v, 4);
          ix += 4;
       }
    };
@@ -1409,11 +1409,11 @@ namespace glz
                            b.resize(2 * k);
                         }
                      }
-                     std::memcpy(&b[ix], "\n", 1);
+                     glz::memcpy(&b[ix], "\n", 1);
                      ++ix;
                      std::memset(&b[ix], Opts.indentation_char, ctx.indentation_level);
                      ix += ctx.indentation_level;
-                     std::memcpy(&b[ix], "}", 1);
+                     glz::memcpy(&b[ix], "}", 1);
                      ++ix;
                   }
                   else {
@@ -1764,7 +1764,7 @@ namespace glz
                         b.resize(2 * k);
                      }
                   }
-                  std::memcpy(&b[ix], "{\n", 2);
+                  glz::memcpy(&b[ix], "{\n", 2);
                   ix += 2;
                   std::memset(&b[ix], Opts.indentation_char, ctx.indentation_level);
                   ix += ctx.indentation_level;
@@ -1836,13 +1836,13 @@ namespace glz
                      else {
                         // Null members may be skipped so we cant just write it out for all but the last member
                         if constexpr (Opts.prettify) {
-                           std::memcpy(&b[ix], ",\n", 2);
+                           glz::memcpy(&b[ix], ",\n", 2);
                            ix += 2;
                            std::memset(&b[ix], Opts.indentation_char, ctx.indentation_level);
                            ix += ctx.indentation_level;
                         }
                         else {
-                           std::memcpy(&b[ix], ",", 1);
+                           glz::memcpy(&b[ix], ",", 1);
                            ++ix;
                         }
                      }
@@ -1851,7 +1851,7 @@ namespace glz
                      static constexpr auto key = glz::get<I>(reflect<T>::keys); // GCC 14 requires auto here
                      static constexpr auto quoted_key = quoted_key_v<key, Opts.prettify>;
                      static constexpr auto n = quoted_key.size();
-                     std::memcpy(&b[ix], quoted_key.data(), n);
+                     glz::memcpy(&b[ix], quoted_key.data(), n);
                      ix += n;
 
                      static constexpr auto check_opts = required_padding<val_t>() ? write_unchecked_on<Opts>() : Opts;
@@ -1882,7 +1882,7 @@ namespace glz
                   }
 
                   if constexpr (I != 0 && Opts.prettify) {
-                     std::memcpy(&b[ix], ",\n", 2);
+                     glz::memcpy(&b[ix], ",\n", 2);
                      ix += 2;
                      std::memset(&b[ix], Opts.indentation_char, ctx.indentation_level);
                      ix += ctx.indentation_level;
@@ -1896,13 +1896,13 @@ namespace glz
                      if constexpr (I == 0 || Opts.prettify) {
                         static constexpr auto quoted_key = join_v<quoted_key_v<key, Opts.prettify>, chars<"null">>;
                         static constexpr auto n = quoted_key.size();
-                        std::memcpy(&b[ix], quoted_key.data(), n);
+                        glz::memcpy(&b[ix], quoted_key.data(), n);
                         ix += n;
                      }
                      else {
                         static constexpr auto quoted_key = join_v<chars<",">, quoted_key_v<key>, chars<"null">>;
                         static constexpr auto n = quoted_key.size();
-                        std::memcpy(&b[ix], quoted_key.data(), n);
+                        glz::memcpy(&b[ix], quoted_key.data(), n);
                         ix += n;
                      }
                   }
@@ -1910,13 +1910,13 @@ namespace glz
                      if constexpr (I == 0 || Opts.prettify) {
                         static constexpr auto quoted_key = quoted_key_v<key, Opts.prettify>;
                         static constexpr auto n = quoted_key.size();
-                        std::memcpy(&b[ix], quoted_key.data(), n);
+                        glz::memcpy(&b[ix], quoted_key.data(), n);
                         ix += n;
                      }
                      else {
                         static constexpr auto quoted_key = join_v<chars<",">, quoted_key_v<key>>;
                         static constexpr auto n = quoted_key.size();
-                        std::memcpy(&b[ix], quoted_key.data(), n);
+                        glz::memcpy(&b[ix], quoted_key.data(), n);
                         ix += n;
                      }
 
@@ -1941,11 +1941,11 @@ namespace glz
                         b.resize(2 * k);
                      }
                   }
-                  std::memcpy(&b[ix], "\n", 1);
+                  glz::memcpy(&b[ix], "\n", 1);
                   ++ix;
                   std::memset(&b[ix], Opts.indentation_char, ctx.indentation_level);
                   ix += ctx.indentation_level;
-                  std::memcpy(&b[ix], "}", 1);
+                  glz::memcpy(&b[ix], "}", 1);
                   ++ix;
                }
                else {

@@ -73,7 +73,7 @@ namespace glz::detail
       ++it; // skip quote
       while (it < end) [[likely]] {
          uint64_t chunk;
-         std::memcpy(&chunk, it, 8);
+         glz::memcpy(&chunk, it, 8);
          const uint64_t quote = has_quote(chunk);
          if (quote) {
             it += (countr_zero(quote) >> 3);
@@ -104,7 +104,7 @@ namespace glz::detail
       ++it; // skip quote
       for (const auto end_m7 = end - 7; it < end_m7;) {
          uint64_t chunk;
-         std::memcpy(&chunk, it, 8);
+         glz::memcpy(&chunk, it, 8);
          const uint64_t quote = has_quote(chunk);
          if (quote) {
             it += (countr_zero(quote) >> 3);
@@ -149,7 +149,7 @@ namespace glz::detail
       it += 2; // skip /*
       for (const auto end_m7 = end - 7; it < end_m7;) {
          uint64_t chunk;
-         std::memcpy(&chunk, it, 8);
+         glz::memcpy(&chunk, it, 8);
          const uint64_t slash = has_char<'/'>(chunk);
          if (slash) {
             it += (countr_zero(slash) >> 3);

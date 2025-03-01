@@ -106,8 +106,8 @@ namespace glz::repe
          const uint32_t n = uint32_t(error_message.size());
          out.header.body_length = 4 + n;
          out.body.resize(out.header.body_length);
-         std::memcpy(out.body.data(), &n, 4);
-         std::memcpy(out.body.data() + 4, error_message.data(), n);
+         glz::memcpy(out.body.data(), &n, 4);
+         glz::memcpy(out.body.data() + 4, error_message.data(), n);
 
          write_response<Opts>(state);
          return 0;
@@ -495,8 +495,8 @@ namespace glz::repe
             out.body.resize(body_length);
             out.header.ec = error_code::method_not_found;
             out.header.body_length = body_length;
-            std::memcpy(out.body.data(), &n, 4);
-            std::memcpy(out.body.data() + 4, body.data(), n);
+            glz::memcpy(out.body.data(), &n, 4);
+            glz::memcpy(out.body.data() + 4, body.data(), n);
          }
       }
    };

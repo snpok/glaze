@@ -11,7 +11,6 @@
 #include <cstddef>
 #include <cstdint>
 #include <cstdlib>
-#include <cstring>
 #include <limits>
 #include <numeric>
 #include <span>
@@ -19,6 +18,7 @@
 
 #include "glaze/concepts/container_concepts.hpp"
 #include "glaze/util/compare.hpp"
+#include "glaze/util/memcpy.hpp"
 
 #ifdef _MSC_VER
 // Turn off broken warning from MSVC for << operator precedence
@@ -93,31 +93,31 @@ namespace glz
       else {
          switch (N) {
          case 1: {
-            std::memcpy(&res, bytes, 1);
+            glz::memcpy(&res, bytes, 1);
             break;
          }
          case 2: {
-            std::memcpy(&res, bytes, 2);
+            glz::memcpy(&res, bytes, 2);
             break;
          }
          case 3: {
-            std::memcpy(&res, bytes, 3);
+            glz::memcpy(&res, bytes, 3);
             break;
          }
          case 4: {
-            std::memcpy(&res, bytes, 4);
+            glz::memcpy(&res, bytes, 4);
             break;
          }
          case 5: {
-            std::memcpy(&res, bytes, 5);
+            glz::memcpy(&res, bytes, 5);
             break;
          }
          case 6: {
-            std::memcpy(&res, bytes, 6);
+            glz::memcpy(&res, bytes, 6);
             break;
          }
          case 7: {
-            std::memcpy(&res, bytes, 7);
+            glz::memcpy(&res, bytes, 7);
             break;
          }
          default: {
@@ -143,12 +143,12 @@ namespace glz
       }
       else if constexpr (N == 8) {
          uint64_t res;
-         std::memcpy(&res, bytes, N);
+         glz::memcpy(&res, bytes, N);
          return res;
       }
       else {
          uint64_t res{};
-         std::memcpy(&res, bytes, N);
+         glz::memcpy(&res, bytes, N);
          constexpr auto num_bytes = sizeof(uint64_t);
          constexpr auto shift = (uint64_t(num_bytes - N) << 3);
          if constexpr (shift == 0) {

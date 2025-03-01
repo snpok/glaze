@@ -7,11 +7,11 @@
 #include <bit>
 #include <concepts>
 #include <cstdint>
-#include <cstring>
 #include <iterator>
 
 #include "glaze/core/context.hpp"
 #include "glaze/util/inline.hpp"
+#include "glaze/util/memcpy.hpp"
 
 namespace glz
 {
@@ -75,7 +75,7 @@ namespace glz
       }
 
       uint8_t header;
-      std::memcpy(&header, it, 1);
+      glz::memcpy(&header, it, 1);
       const uint8_t config = header & 0b000000'11;
 
       if ((it + byte_count_lookup[config]) > end) [[unlikely]] {
@@ -89,13 +89,13 @@ namespace glz
          return header >> 2;
       case 1: {
          uint16_t h;
-         std::memcpy(&h, it, 2);
+         glz::memcpy(&h, it, 2);
          it += 2;
          return h >> 2;
       }
       case 2: {
          uint32_t h;
-         std::memcpy(&h, it, 4);
+         glz::memcpy(&h, it, 4);
          it += 4;
          return h >> 2;
       }
@@ -104,7 +104,7 @@ namespace glz
          // running in 64-bit mode here
          if constexpr (sizeof(size_t) > sizeof(uint32_t)) {
             uint64_t h;
-            std::memcpy(&h, it, 8);
+            glz::memcpy(&h, it, 8);
             it += 8;
             h = h >> 2;
             static constexpr uint64_t safety_limit = 1ull << 48; // 2^48
@@ -129,7 +129,7 @@ namespace glz
       }
 
       uint8_t header;
-      std::memcpy(&header, it, 1);
+      glz::memcpy(&header, it, 1);
       const uint8_t config = header & 0b000000'11;
 
       if ((it + byte_count_lookup[config]) > end) [[unlikely]] {

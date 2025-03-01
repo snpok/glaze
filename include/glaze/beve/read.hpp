@@ -133,7 +133,7 @@ namespace glz
                return;
             }
             uint8_t byte;
-            std::memcpy(&byte, it, 1);
+            glz::memcpy(&byte, it, 1);
             for (size_t bit_i = 0; bit_i < 8 && i < n; ++bit_i, ++i) {
                value[i] = byte >> bit_i & uint8_t(1);
             }
@@ -166,7 +166,7 @@ namespace glz
             ctx.error = error_code::unexpected_end;
             return;
          }
-         std::memcpy(data, it, Length);
+         glz::memcpy(data, it, Length);
          it += Length;
 
          invoke_table<N>([&]<size_t I>() {
@@ -208,7 +208,7 @@ namespace glz
                         ctx.error = error_code::unexpected_end;
                         return;
                      }
-                     std::memcpy(&i, it, sizeof(i));
+                     glz::memcpy(&i, it, sizeof(i));
                      value = static_cast<V>(i);
                      it += sizeof(i);
                   };
@@ -290,11 +290,11 @@ namespace glz
 
          if constexpr (is_volatile) {
             V temp;
-            std::memcpy(&temp, it, sizeof(V));
+            glz::memcpy(&temp, it, sizeof(V));
             value = temp;
          }
          else {
-            std::memcpy(&value, it, sizeof(V));
+            glz::memcpy(&value, it, sizeof(V));
          }
          it += sizeof(V);
       }
@@ -327,7 +327,7 @@ namespace glz
                return;
             }
 
-            std::memcpy(&value, it, sizeof(V));
+            glz::memcpy(&value, it, sizeof(V));
             it += sizeof(V);
          }
          else {
@@ -349,7 +349,7 @@ namespace glz
                return;
             }
 
-            std::memcpy(&value, it, sizeof(V));
+            glz::memcpy(&value, it, sizeof(V));
             it += sizeof(V);
          }
       }
@@ -369,7 +369,7 @@ namespace glz
                return;
             }
 
-            std::memcpy(&value, it, sizeof(V));
+            glz::memcpy(&value, it, sizeof(V));
             it += sizeof(V);
          }
          else {
@@ -405,7 +405,7 @@ namespace glz
                return;
             }
 
-            std::memcpy(&value, it, 2 * sizeof(V));
+            glz::memcpy(&value, it, 2 * sizeof(V));
             it += 2 * sizeof(V);
          }
       }
@@ -518,7 +518,7 @@ namespace glz
             return;
          }
          value.resize(n);
-         std::memcpy(value.data(), it, n);
+         glz::memcpy(value.data(), it, n);
          it += n;
       }
 
@@ -552,7 +552,7 @@ namespace glz
          }
          else {
             value.resize(n);
-            std::memcpy(value.data(), it, n);
+            glz::memcpy(value.data(), it, n);
          }
          it += n;
       }
@@ -596,7 +596,7 @@ namespace glz
                   return;
                }
                uint8_t byte;
-               std::memcpy(&byte, it, 1);
+               glz::memcpy(&byte, it, 1);
                for (size_t bit_i = 7; bit_i < 8 && i < n; --bit_i, ++i) {
                   bool x = byte >> bit_i & uint8_t(1);
                   value.emplace(x);
@@ -627,7 +627,7 @@ namespace glz
                }
 
                V x;
-               std::memcpy(&x, it, sizeof(V));
+               glz::memcpy(&x, it, sizeof(V));
                it += sizeof(V);
                value.emplace(x);
             }
@@ -665,7 +665,7 @@ namespace glz
                }
                V str;
                str.resize(length);
-               std::memcpy(str.data(), it, length);
+               glz::memcpy(str.data(), it, length);
                it += length;
                value.emplace(std::move(str));
             }
@@ -739,7 +739,7 @@ namespace glz
                   return;
                }
                uint8_t byte;
-               std::memcpy(&byte, it, 1);
+               glz::memcpy(&byte, it, 1);
                for (size_t bit_i = 7; bit_i < 8 && i < n; --bit_i, ++i) {
                   value[i] = byte >> bit_i & uint8_t(1);
                }
@@ -836,7 +836,7 @@ namespace glz
                         return;
                      }
 
-                     std::memcpy(&temp, it, sizeof(V));
+                     glz::memcpy(&temp, it, sizeof(V));
                      value[i] = temp;
                      it += sizeof(V);
                   }
@@ -846,7 +846,7 @@ namespace glz
                      ctx.error = error_code::unexpected_end;
                      return;
                   }
-                  std::memcpy(value.data(), it, n * sizeof(V));
+                  glz::memcpy(value.data(), it, n * sizeof(V));
                   it += n * sizeof(V);
                }
             }
@@ -857,7 +857,7 @@ namespace glz
                      return;
                   }
 
-                  std::memcpy(&x, it, sizeof(V));
+                  glz::memcpy(&x, it, sizeof(V));
                   it += sizeof(V);
                }
             }
@@ -906,7 +906,7 @@ namespace glz
                   value.shrink_to_fit();
                }
 
-               std::memcpy(x.data(), it, length);
+               glz::memcpy(x.data(), it, length);
                it += length;
             }
          }
@@ -954,12 +954,12 @@ namespace glz
             }
 
             if constexpr (contiguous<T>) {
-               std::memcpy(value.data(), it, n * sizeof(V));
+               glz::memcpy(value.data(), it, n * sizeof(V));
                it += n * sizeof(V);
             }
             else {
                for (auto&& x : value) {
-                  std::memcpy(&x, it, sizeof(V));
+                  glz::memcpy(&x, it, sizeof(V));
                   it += sizeof(V);
                }
             }

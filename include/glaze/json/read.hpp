@@ -541,7 +541,7 @@ namespace glz
                0b00000000'00000000'00000000'01100101'01110011'01101100'01100001'01100110;
             if constexpr (Opts.null_terminated) {
                // Note that because our buffer must be null terminated, we can read one more index without checking:
-               std::memcpy(&c, it, 5);
+               glz::memcpy(&c, it, 5);
                // We have to wipe the 5th character for true testing
                if ((c & 0xFF'FF'FF'00'FF'FF'FF'FF) == u_true) {
                   value = true;
@@ -557,7 +557,7 @@ namespace glz
                }
             }
             else {
-               std::memcpy(&c, it, 4);
+               glz::memcpy(&c, it, 4);
                if (c == u_true) {
                   value = true;
                   it += 4;
@@ -567,7 +567,7 @@ namespace glz
                   return;
                }
                else {
-                  std::memcpy(&c, it, 5);
+                  glz::memcpy(&c, it, 5);
                   if (c == u_false) [[likely]] {
                      value = false;
                      it += 5;
@@ -746,7 +746,7 @@ namespace glz
                   }
 
                   uint64_t chunk;
-                  std::memcpy(&chunk, it, 8);
+                  glz::memcpy(&chunk, it, 8);
                   const uint64_t test_chars = has_quote(chunk);
                   if (test_chars) {
                      it += (countr_zero(test_chars) >> 3);
@@ -775,9 +775,9 @@ namespace glz
                      break;
                   }
 
-                  std::memcpy(p, start, 8);
+                  glz::memcpy(p, start, 8);
                   uint64_t swar;
-                  std::memcpy(&swar, p, 8);
+                  glz::memcpy(&swar, p, 8);
 
                   constexpr uint64_t lo7_mask = repeat_byte8(0b01111111);
                   const uint64_t lo7 = swar & lo7_mask;
@@ -886,7 +886,7 @@ namespace glz
                      }
 
                      uint64_t chunk;
-                     std::memcpy(&chunk, it, 8);
+                     glz::memcpy(&chunk, it, 8);
                      const uint64_t test_chars = has_quote(chunk);
                      if (test_chars) {
                         it += (countr_zero(test_chars) >> 3);
@@ -940,9 +940,9 @@ namespace glz
                            break;
                         }
 
-                        std::memcpy(p, start, 8);
+                        glz::memcpy(p, start, 8);
                         uint64_t swar;
-                        std::memcpy(&swar, p, 8);
+                        glz::memcpy(&swar, p, 8);
 
                         constexpr uint64_t lo7_mask = repeat_byte8(0b01111111);
                         const uint64_t lo7 = swar & lo7_mask;
@@ -1145,7 +1145,7 @@ namespace glz
                ctx.error = error_code::unexpected_end;
                return;
             }
-            std::memcpy(value, start, n);
+            glz::memcpy(value, start, n);
             value[n] = '\0';
          }
          else if constexpr (array_char_t<T>) {
@@ -1154,7 +1154,7 @@ namespace glz
                ctx.error = error_code::unexpected_end;
                return;
             }
-            std::memcpy(value.data(), start, n);
+            glz::memcpy(value.data(), start, n);
             value[n] = '\0';
          }
          else if constexpr (static_string_t<T>) {

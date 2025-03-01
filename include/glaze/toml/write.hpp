@@ -66,20 +66,20 @@ namespace glz
 
          if constexpr (Opts.bools_as_numbers) {
             if (value) {
-               std::memcpy(&b[ix], "1", 1);
+               glz::memcpy(&b[ix], "1", 1);
             }
             else {
-               std::memcpy(&b[ix], "0", 1);
+               glz::memcpy(&b[ix], "0", 1);
             }
             ++ix;
          }
          else {
             if (value) {
-               std::memcpy(&b[ix], "true", 4);
+               glz::memcpy(&b[ix], "true", 4);
                ix += 4;
             }
             else {
-               std::memcpy(&b[ix], "false", 5);
+               glz::memcpy(&b[ix], "false", 5);
                ix += 5;
             }
          }
@@ -93,10 +93,10 @@ namespace glz
       GLZ_ALWAYS_INLINE static void op(auto&& value, is_context auto&& ctx, B&& b, auto&& ix)
       {
          if constexpr (Opts.quoted_num) {
-            std::memcpy(&b[ix], "\"", 1);
+            glz::memcpy(&b[ix], "\"", 1);
             ++ix;
             write_chars::op<Opts>(value, ctx, b, ix);
-            std::memcpy(&b[ix], "\"", 1);
+            glz::memcpy(&b[ix], "\"", 1);
             ++ix;
          }
          else {
@@ -141,20 +141,20 @@ namespace glz
                   }
                }
 
-               std::memcpy(&b[ix], "\"", 1);
+               glz::memcpy(&b[ix], "\"", 1);
                ++ix;
                if (const auto escaped = char_escape_table[uint8_t(value)]; escaped) {
-                  std::memcpy(&b[ix], &escaped, 2);
+                  glz::memcpy(&b[ix], &escaped, 2);
                   ix += 2;
                }
                else if (value == '\0') {
                   // null character treated as empty string
                }
                else {
-                  std::memcpy(&b[ix], &value, 1);
+                  glz::memcpy(&b[ix], &value, 1);
                   ++ix;
                }
-               std::memcpy(&b[ix], "\"", 1);
+               glz::memcpy(&b[ix], "\"", 1);
                ++ix;
             }
          }
@@ -177,14 +177,14 @@ namespace glz
                   }
                }
 
-               std::memcpy(&b[ix], "\"", 1);
+               glz::memcpy(&b[ix], "\"", 1);
                ++ix;
                if (str.size()) [[likely]] {
                   const auto n = str.size();
-                  std::memcpy(&b[ix], str.data(), n);
+                  glz::memcpy(&b[ix], str.data(), n);
                   ix += n;
                }
-               std::memcpy(&b[ix], "\"", 1);
+               glz::memcpy(&b[ix], "\"", 1);
                ++ix;
             }
             else {
@@ -210,12 +210,12 @@ namespace glz
                if constexpr (Opts.raw) {
                   const auto n = str.size();
                   if (n) {
-                     std::memcpy(&b[ix], str.data(), n);
+                     glz::memcpy(&b[ix], str.data(), n);
                      ix += n;
                   }
                }
                else {
-                  std::memcpy(&b[ix], "\"", 1);
+                  glz::memcpy(&b[ix], "\"", 1);
                   ++ix;
                   const auto* c = str.data();
                   const auto* const e = c + n;
@@ -224,9 +224,9 @@ namespace glz
 
                   if (n > 7) {
                      for (const auto end_m7 = e - 7; c < end_m7;) {
-                        std::memcpy(data, c, 8);
+                        glz::memcpy(data, c, 8);
                         uint64_t swar;
-                        std::memcpy(&swar, c, 8);
+                        glz::memcpy(&swar, c, 8);
 
                         constexpr uint64_t lo7_mask = repeat_byte8(0b01111111);
                         const uint64_t lo7 = swar & lo7_mask;
@@ -246,7 +246,7 @@ namespace glz
                         c += length;
                         data += length;
 
-                        std::memcpy(data, &char_escape_table[uint8_t(*c)], 2);
+                        glz::memcpy(data, &char_escape_table[uint8_t(*c)], 2);
                         data += 2;
                         ++c;
                      }
@@ -254,18 +254,18 @@ namespace glz
 
                   for (; c < e; ++c) {
                      if (const auto escaped = char_escape_table[uint8_t(*c)]; escaped) {
-                        std::memcpy(data, &escaped, 2);
+                        glz::memcpy(data, &escaped, 2);
                         data += 2;
                      }
                      else {
-                        std::memcpy(data, c, 1);
+                        glz::memcpy(data, c, 1);
                         ++data;
                      }
                   }
 
                   ix += size_t(data - start);
 
-                  std::memcpy(&b[ix], "\"", 1);
+                  glz::memcpy(&b[ix], "\"", 1);
                   ++ix;
                }
             }
@@ -284,7 +284,7 @@ namespace glz
             }
          }
       }
-      std::memcpy(&b[ix], ", ", 2);
+      glz::memcpy(&b[ix], ", ", 2);
       ix += 2;
    }
 
@@ -292,7 +292,7 @@ namespace glz
       requires(Opts.format == TOML)
    GLZ_ALWAYS_INLINE void write_object_entry_separator(is_context auto&&, B&& b, auto&& ix)
    {
-      std::memcpy(&b[ix], "\n", 1);
+      glz::memcpy(&b[ix], "\n", 1);
       ++ix;
    }
 
@@ -355,18 +355,18 @@ namespace glz
                if constexpr (glaze_object_t<val_t> || reflectable<val_t>) {
                   // Print the table header (e.g. "[inner]") for the nested object.
                   if (!first) {
-                     std::memcpy(&b[ix], "\n", 1);
+                     glz::memcpy(&b[ix], "\n", 1);
                      ++ix;
                   }
                   else {
                      first = false;
                   }
                   static constexpr auto key = glz::get<I>(reflect<T>::keys);
-                  std::memcpy(&b[ix], "[", 1);
+                  glz::memcpy(&b[ix], "[", 1);
                   ++ix;
-                  std::memcpy(&b[ix], key.data(), key.size());
+                  glz::memcpy(&b[ix], key.data(), key.size());
                   ix += key.size();
-                  std::memcpy(&b[ix], "]\n", 2);
+                  glz::memcpy(&b[ix], "]\n", 2);
                   ix += 2;
 
                   // Serialize the nested object.
@@ -377,23 +377,23 @@ namespace glz
                      to<TOML, val_t>::template op<Options>(get_member(value, get<I>(reflect<T>::values)), ctx, b, ix);
                   }
                   // Add an extra newline to separate this table section from following keys.
-                  std::memcpy(&b[ix], "\n", 1);
+                  glz::memcpy(&b[ix], "\n", 1);
                   ++ix;
                }
                else {
                   // --- Field is not an object, so output a key/value pair ---
                   if (!first) {
-                     std::memcpy(&b[ix], "\n", 1);
+                     glz::memcpy(&b[ix], "\n", 1);
                      ++ix;
                   }
                   else {
                      first = false;
                   }
                   static constexpr auto key = glz::get<I>(reflect<T>::keys);
-                  std::memcpy(&b[ix], key.data(), key.size());
+                  glz::memcpy(&b[ix], key.data(), key.size());
                   ix += key.size();
 
-                  std::memcpy(&b[ix], " = ", 3);
+                  glz::memcpy(&b[ix], " = ", 3);
                   ix += 3;
 
                   if constexpr (reflectable<T>) {
@@ -432,7 +432,7 @@ namespace glz
                      b.resize(2 * k);
                   }
                }
-               std::memcpy(&b[ix], "[", 1);
+               glz::memcpy(&b[ix], "[", 1);
                ++ix;
                auto it = std::begin(value);
                using val_t = std::remove_cvref_t<decltype(*it)>;
@@ -442,7 +442,7 @@ namespace glz
                   write_array_entry_separator<Opts>(ctx, b, ix);
                   to<TOML, val_t>::template op<Opts>(*it, ctx, b, ix);
                }
-               std::memcpy(&b[ix], "]", 1);
+               glz::memcpy(&b[ix], "]", 1);
                ++ix;
             }
             else {
@@ -451,7 +451,7 @@ namespace glz
                      b.resize(2 * k);
                   }
                }
-               std::memcpy(&b[ix], "[", 1);
+               glz::memcpy(&b[ix], "[", 1);
                ++ix;
                auto it = std::begin(value);
                using val_t = std::remove_cvref_t<decltype(*it)>;
@@ -480,9 +480,9 @@ namespace glz
                first = false;
             }
             // Write the key as a bare key
-            std::memcpy(&b[ix], key.data(), key.size());
+            glz::memcpy(&b[ix], key.data(), key.size());
             ix += key.size();
-            std::memcpy(&b[ix], " = ", 3);
+            glz::memcpy(&b[ix], " = ", 3);
             ix += 3;
             to<TOML, decltype(val)>::template op<Opts>(val, ctx, b, ix);
          }

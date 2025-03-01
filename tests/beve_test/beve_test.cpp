@@ -210,8 +210,8 @@ void write_tests()
          float f{0.96875f};
          auto start = f;
          s.resize(sizeof(float));
-         std::memcpy(s.data(), &f, sizeof(float));
-         std::memcpy(&f, s.data(), sizeof(float));
+         glz::memcpy(s.data(), &f, sizeof(float));
+         glz::memcpy(&f, s.data(), sizeof(float));
          expect(start == f);
       }
    };

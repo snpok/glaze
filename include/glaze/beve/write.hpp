@@ -47,10 +47,10 @@ namespace glz
 
       if constexpr (is_volatile) {
          const V temp = value;
-         std::memcpy(&b[ix], &temp, n);
+         glz::memcpy(&b[ix], &temp, n);
       }
       else {
-         std::memcpy(&b[ix], &value, n);
+         glz::memcpy(&b[ix], &value, n);
       }
       ix += n;
    }
@@ -461,7 +461,7 @@ namespace glz
             b.resize(2 * k);
          }
 
-         std::memcpy(&b[ix], str.data(), n);
+         glz::memcpy(&b[ix], str.data(), n);
          ix += n;
       }
 
@@ -475,7 +475,7 @@ namespace glz
             b.resize(2 * k);
          }
 
-         std::memcpy(&b[ix], value.data(), n);
+         glz::memcpy(&b[ix], value.data(), n);
          ix += n;
       }
    };
@@ -543,12 +543,12 @@ namespace glz
                      const auto n_elements = value.size();
                      for (size_t i = 0; i < n_elements; ++i) {
                         temp = value[i];
-                        std::memcpy(&b[ix], &temp, sizeof(V));
+                        glz::memcpy(&b[ix], &temp, sizeof(V));
                         ix += sizeof(V);
                      }
                   }
                   else {
-                     std::memcpy(&b[ix], value.data(), n);
+                     glz::memcpy(&b[ix], value.data(), n);
                      ix += n;
                   }
                };
@@ -577,7 +577,7 @@ namespace glz
                      b.resize(2 * k);
                   }
 
-                  std::memcpy(&b[ix], x.data(), n);
+                  glz::memcpy(&b[ix], x.data(), n);
                   ix += n;
                };
 

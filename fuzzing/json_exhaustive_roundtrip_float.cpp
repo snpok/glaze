@@ -1,7 +1,6 @@
 #include <cstddef>
 #include <cstdint>
 #include <cstdlib>
-#include <cstring>
 #include <future>
 #include <glaze/glaze.hpp>
 #include <iostream>
@@ -22,7 +21,7 @@ void test()
 
    auto test_one_value = [](const UT loopvar, auto& outbuf) {
       Value s;
-      std::memcpy(&s.v, &loopvar, sizeof(float));
+      glz::memcpy(&s.v, &loopvar, sizeof(float));
 
       if (!std::isfinite(s.v)) {
          return;

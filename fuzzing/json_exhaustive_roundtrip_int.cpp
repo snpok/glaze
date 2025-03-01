@@ -1,7 +1,6 @@
 #include <cstddef>
 #include <cstdint>
 #include <cstdlib>
-#include <cstring>
 #include <glaze/glaze.hpp>
 #include <iostream>
 #include <thread>
@@ -22,7 +21,7 @@ void test()
 
    auto testone = [](const UT loopvar, auto& outbuf) {
       S s;
-      std::memcpy(&s.value, &loopvar, sizeof(T));
+      glz::memcpy(&s.value, &loopvar, sizeof(T));
 
       outbuf.clear();
       const auto writeec = glz::write_json(s, outbuf);
